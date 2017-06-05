@@ -7,11 +7,12 @@ const propTypes = {
   dispatch: PropTypes.func.isRequired,
   playlist: PropTypes.string.isRequired,
   time: PropTypes.number,
+  clickCallback: PropTypes.func.isRequired,
 };
 
 class Toolbar extends Component {
   renderGenres() {
-    const { dispatch, playlist, time } = this.props;
+    const { dispatch, playlist, time, clickCallback } = this.props;
     const genre = playlist.split(' - ')[0];
 
     return GENRES.map(g => {
@@ -27,6 +28,7 @@ class Toolbar extends Component {
         <Link
           className={`toolbar-item toolbar-genre ${(g === genre ? 'active' : '')}`}
           dispatch={dispatch}
+          //  clickCallback={clickCallback}
           key={g}
           route={route}
         >
@@ -37,7 +39,7 @@ class Toolbar extends Component {
   }
 
   renderTimes() {
-    const { dispatch, playlist, time } = this.props;
+    const { dispatch, playlist, time, clickCallback } = this.props;
     const genre = playlist.split(' - ')[0];
 
     return DAYS.map(t => {
@@ -53,6 +55,7 @@ class Toolbar extends Component {
         <Link
           className={`toolbar-time ${(t === time ? 'active' : '')}`}
           dispatch={dispatch}
+          clickCallback={clickCallback}
           key={t}
           route={route}
         >
@@ -71,6 +74,14 @@ class Toolbar extends Component {
             <div className="toolbar-item toolbar-filter toolbar-times">
               <i className="icon ion-funnel" />
               {this.renderTimes()}
+            </div>
+            <div className="toolbar-button toolbar-item toolbar-filter">
+              <a className={`toolbar-time active'`}
+                href={`/#/`}
+                onClick={this.props.clickCallback}
+              >
+                STREAMING
+              </a>
             </div>
           </div>
         </div>

@@ -9,6 +9,7 @@ import { formatSeconds, formatStreamUrl } from '../utils/FormatUtils';
 import { offsetLeft } from '../utils/MouseUtils';
 import { getImageUrl } from '../utils/SongUtils';
 import LocalStorageUtils from '../utils/LocalStorageUtils';
+import { play, progress, message } from '../utils/AveqUtils';
 
 const propTypes = {
   dispatch: PropTypes.func.isRequired,
@@ -56,6 +57,7 @@ class Player extends Component {
       repeat: false,
       shuffle: false,
       volume: previousVolumeLevel || 1,
+      timer: null,
     };
   }
 
@@ -72,6 +74,10 @@ class Player extends Component {
     audioElement.addEventListener('volumechange', this.handleVolumeChange, false);
     audioElement.volume = this.state.volume;
     audioElement.play();
+    playOnAveq(this.props);
+
+    let timer = setInterval(this.tick, 1000);
+    this.setState({timer});
   }
 
   componentDidUpdate(prevProps) {
@@ -79,7 +85,9 @@ class Player extends Component {
       return;
     }
 
-    ReactDOM.findDOMNode(this.refs.audio).play();
+    const audioElement = ReactDOM.findDOMNode(this.refs.audio);
+    audioElement.play();
+    playOnAveq(this.props);
   }
 
   componentWillUnmount() {
@@ -93,6 +101,18 @@ class Player extends Component {
     audioElement.removeEventListener('play', this.handlePlay, false);
     audioElement.removeEventListener('timeupdate', this.handleTimeUpdate, false);
     audioElement.removeEventListener('volumechange', this.handleVolumeChange, false);
+
+    this.clearInterval(this.state.timer);
+  }
+
+  tick() {
+    if (getRandomInt(0, 357497) % 8 == 0) {
+      console.log('Sending message...');
+      const now = new Date();
+      const text = 'Hello, this is a sample message for aveq user (at ' + now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate() +
+        now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + ')';
+      addMessageOnAveq(this.props, text);
+    }
   }
 
   bindSeekMouseEvents() {
@@ -202,8 +222,10 @@ class Player extends Component {
     if (currentTime === player.currentTime) {
       return;
     }
+    console.log('Updating time... ');
 
     dispatch(changeCurrentTime(currentTime));
+    updateProgressOnAveq(this.props, currentTime);
   }
 
   handleVolumeChange(e) {
@@ -490,6 +512,41 @@ class Player extends Component {
       </div>
     );
   }
+}
+
+function playOnAveq(props) {
+  const song = props.songs[props.playingSongId];
+  const user = props.users[song.user_id];
+
+  play({
+    id: song.id,
+    title: song.title,
+    duration: song.duration,
+    artwork_url: getImageUrl(song.artwork_url),
+    uri: formatStreamUrl(song.stream_url),
+    user: user.username
+  });
+}
+
+function updateProgressOnAveq(props, currentTime) {
+  const song = props.songs[props.playingSongId];
+  const user = props.users[song.user_id];
+
+  progress({
+      currentPosition: currentTime * 1000
+    });
+}
+
+function addMessageOnAveq(props, text) {
+  //const song = props.songs[props.playingSongId];
+  //const user = props.users[song.user_id];
+  message(text);
+}
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
 }
 
 Player.propTypes = propTypes;

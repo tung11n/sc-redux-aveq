@@ -8,6 +8,7 @@ const propTypes = {
   dispatch: PropTypes.func.isRequired,
   route: PropTypes.object.isRequired,
   title: PropTypes.string,
+  clickCallback: PropTypes.func,
 };
 
 class Link extends Component {
@@ -18,7 +19,10 @@ class Link extends Component {
 
   handleClick(e) {
     e.preventDefault();
-    const { dispatch, route } = this.props;
+    const { dispatch, route, clickCallback } = this.props;
+    if (clickCallback) {
+      clickCallback(route);
+    }
     dispatch(navigateTo(route));
   }
 

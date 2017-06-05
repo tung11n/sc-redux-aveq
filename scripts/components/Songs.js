@@ -17,6 +17,7 @@ const propTypes = {
   songs: PropTypes.object.isRequired,
   time: PropTypes.number,
   users: PropTypes.object.isRequired,
+  clickCallback: PropTypes.func.isRequired,
 };
 
 class Songs extends Component {
@@ -48,11 +49,12 @@ class Songs extends Component {
       songs,
       time,
       users,
+      clickCallback,
     } = this.props;
 
     return (
       <div className={`songs ${(sticky ? 'sticky' : '')}`}>
-        <Toolbar dispatch={dispatch} playlist={playlist} sticky={sticky} time={time} />
+        <Toolbar dispatch={dispatch} clickCallback={clickCallback} playlist={playlist} sticky={sticky} time={time} />
         <div className="container">
           <SongCards
             authed={authed}

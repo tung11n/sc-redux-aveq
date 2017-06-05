@@ -56,6 +56,7 @@ export function fetchSongs(url, playlist) {
 export function fetchSongsIfNeeded(playlist) {
   return (dispatch, getState) => {
     const { playlists } = getState();
+
     if (shouldFetchSongs(playlists, playlist)) {
       const nextUrl = getNextUrl(playlists, playlist);
       return dispatch(fetchSongs(nextUrl, playlist));

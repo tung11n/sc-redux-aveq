@@ -12,6 +12,14 @@
     width: 100%;
 }
 
+.toolbar-button {
+    flex: none;
+    width: 234px;
+    background-color: #D81B60;
+    color: #fff;
+    box-shadow: none;
+}
+
 .toolbar-items {
     display: flex;
     height: 40px;

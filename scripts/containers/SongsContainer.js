@@ -4,9 +4,11 @@ import { fetchSongsIfNeeded } from '../actions/PlaylistsActions';
 import MobileSongs from '../components/MobileSongs';
 import Songs from '../components/Songs';
 import { getPlayingSongId } from '../utils/PlayerUtils';
+import { toggleStream }  from '../utils/AveqUtils';
 
 const propTypes = {
   isMobile: PropTypes.bool,
+  clickCallback: PropTypes.func,
 };
 
 class SongsContainer extends Component {
@@ -18,9 +20,17 @@ class SongsContainer extends Component {
 
     return <Songs {...this.props} />;
   }
+  componentDidMount() {
+    //createStream(this.props.playlist,'','digitalage','dfca6698a71b1d51bb9a2947270364a072664085212a5f5edaa87d0cdc52881a');
+  }
 }
 
 SongsContainer.propTypes = propTypes;
+
+function clickCallback(e) {
+  e.preventDefault();
+  toggleStream('Chill','');
+}
 
 function mapStateToProps(state) {
   const { authed, entities, environment, navigator, player, playlists } = state;
@@ -46,6 +56,7 @@ function mapStateToProps(state) {
     songs,
     time,
     users,
+    clickCallback: clickCallback,
   };
 }
 
