@@ -2,7 +2,7 @@ var live = false;
 var webSocket;
 var streamId;
 const token = 'dfca6698a71b1d51bb9a2947270364a072664085212a5f5edaa87d0cdc52881a';
-const endpoint = 'ws://localhost:4567/s/host'; //'wss://aveq.io/api/s/host'; //
+const endpoint = 'wss://aveq.io/api/s/host'; //'ws://localhost:4567/s/host'; //
 
 export function toggleStream(streamName, streamDesc) {
   if (!live) {
